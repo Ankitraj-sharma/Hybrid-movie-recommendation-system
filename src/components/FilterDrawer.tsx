@@ -2,35 +2,49 @@
 
 import React from "react";
 import { FilterState } from "@/lib/types";
-import { Search, SlidersHorizontal, RotateCcw, Star, Film, User, Tag } from "lucide-react";
+import { Search, SlidersHorizontal, RotateCcw, Star, Film, User, Tag, Globe, Sparkles } from "lucide-react";
 
 interface FilterDrawerProps {
   filters: FilterState;
   onFilterChange: (filters: FilterState) => void;
   totalFiltered: number;
   availableGenres: string[];
+  isGlobalSearch: boolean;
+  onToggleGlobalSearch: (val: boolean) => void;
+  isSearchingGlobal: boolean;
 }
 
 const POPULAR_DIRECTORS = [
   "Christopher Nolan",
+  "Denis Villeneuve",
   "Quentin Tarantino",
-  "Steven Spielberg",
   "Martin Scorsese",
   "James Cameron",
-  "Denis Villeneuve",
-  "David Fincher",
+  "Steven Spielberg",
   "Ridley Scott",
+  "S.S. Rajamouli",
 ];
 
 const POPULAR_ACTORS = [
+  "Cillian Murphy",
   "Leonardo DiCaprio",
   "Christian Bale",
   "Robert Downey Jr.",
-  "Brad Pitt",
   "Scarlett Johansson",
-  "Tom Hardy",
-  "Cillian Murphy",
-  "Morgan Freeman",
+  "Timothée Chalamet",
+  "Brad Pitt",
+  "Shah Rukh Khan",
+];
+
+const TRENDING_SEARCHES = [
+  "Oppenheimer",
+  "Dune: Part Two",
+  "Deadpool & Wolverine",
+  "Killers of the Flower Moon",
+  "12th Fail",
+  "Kalki 2898 AD",
+  "Interstellar",
+  "The Dark Knight",
 ];
 
 export function FilterDrawer({
@@ -38,6 +52,9 @@ export function FilterDrawer({
   onFilterChange,
   totalFiltered,
   availableGenres,
+  isGlobalSearch,
+  onToggleGlobalSearch,
+  isSearchingGlobal,
 }: FilterDrawerProps) {
   const handleSearchChange = (q: string) => {
     onFilterChange({ ...filters, searchQuery: q });
@@ -94,14 +111,53 @@ export function FilterDrawer({
 
   return (
     <div className="w-full bg-card border border-borderDark/90 rounded-2xl p-5 sm:p-6 mb-8 shadow-xl">
+      {/* Search Mode Toggle & Badge */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onToggleGlobalSearch(false)}
+            className={`text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 border ${
+              !isGlobalSearch
+                ? "bg-accent text-white border-accent shadow-md shadow-accent/30"
+                : "bg-surface text-gray-400 border-borderDark hover:text-white"
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            Curated ML Catalog (4,800+ Blockbusters)
+          </button>
+
+          <button
+            onClick={() => onToggleGlobalSearch(true)}
+            className={`text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 border ${
+              isGlobalSearch
+                ? "bg-emerald-500 text-white border-emerald-500 shadow-md shadow-emerald-500/30"
+                : "bg-surface text-gray-400 border-borderDark hover:text-white"
+            }`}
+          >
+            <Globe className="w-3.5 h-3.5" />
+            1 Million+ Global Database (1900-2026)
+          </button>
+        </div>
+
+        {isGlobalSearch && (
+          <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-md font-medium animate-pulse">
+            Searching across 1,000,000+ movies on IMDb/TMDB
+          </span>
+        )}
+      </div>
+
       {/* Search Input Bar */}
-      <div className="relative mb-6">
+      <div className="relative mb-4">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
         <input
           type="text"
           value={filters.searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
-          placeholder="Search by movie title, director, actor, or genre..."
+          placeholder={
+            isGlobalSearch
+              ? "Search across 1,000,000+ movies (e.g. Oppenheimer, Dune 2, Deadpool, Sholay, Avatar)..."
+              : "Search curated titles by movie name, director, actor, or genre..."
+          }
           className="w-full bg-surface border border-borderDark focus:border-accent text-white placeholder-gray-400 rounded-xl pl-12 pr-4 py-3.5 text-sm sm:text-base outline-none transition shadow-inner"
         />
         {filters.searchQuery && (
@@ -112,6 +168,22 @@ export function FilterDrawer({
             Clear
           </button>
         )}
+      </div>
+
+      {/* Trending / New Movie Quick Chips */}
+      <div className="mb-5 flex flex-wrap items-center gap-1.5">
+        <span className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider mr-1">
+          Trending New Movies:
+        </span>
+        {TRENDING_SEARCHES.map((title) => (
+          <button
+            key={title}
+            onClick={() => handleSearchChange(title)}
+            className="text-[11px] font-medium text-gray-300 bg-surface hover:bg-cardHover border border-borderDark px-2 py-0.5 rounded-md transition hover:border-accent"
+          >
+            {title}
+          </button>
+        ))}
       </div>
 
       {/* Control Bar: Director, Cast, Rating, Sort */}
@@ -141,7 +213,7 @@ export function FilterDrawer({
             type="text"
             value={filters.selectedCast}
             onChange={(e) => onFilterChange({ ...filters, selectedCast: e.target.value })}
-            placeholder="e.g. Leonardo DiCaprio"
+            placeholder="e.g. Cillian Murphy"
             className="w-full bg-surface border border-borderDark focus:border-accent text-white rounded-lg px-3 py-2 text-xs sm:text-sm outline-none"
           />
         </div>
@@ -182,14 +254,14 @@ export function FilterDrawer({
             <option value="hybrid">✨ Hybrid ML Score (Recommended)</option>
             <option value="rating">⭐ Highest Rated (Bayesian IMDb)</option>
             <option value="popularity">🔥 Most Popular (Vote Count)</option>
-            <option value="year">📅 Newest Release</option>
+            <option value="year">📅 Newest Release (Up to 2026)</option>
           </select>
         </div>
       </div>
 
       {/* Quick Select Chips: Directors */}
       <div className="mb-4">
-        <span className="text-xs text-gray-400 font-medium block mb-2">Quick Directors:</span>
+        <span className="text-xs text-gray-400 font-medium block mb-2">Popular Directors:</span>
         <div className="flex flex-wrap gap-1.5">
           {POPULAR_DIRECTORS.map((dir) => {
             const isSelected = filters.selectedDirector.toLowerCase() === dir.toLowerCase();
@@ -212,7 +284,7 @@ export function FilterDrawer({
 
       {/* Quick Select Chips: Actors */}
       <div className="mb-4">
-        <span className="text-xs text-gray-400 font-medium block mb-2">Top Actors:</span>
+        <span className="text-xs text-gray-400 font-medium block mb-2">Leading Actors:</span>
         <div className="flex flex-wrap gap-1.5">
           {POPULAR_ACTORS.map((actor) => {
             const isSelected = filters.selectedCast.toLowerCase() === actor.toLowerCase();
@@ -269,7 +341,16 @@ export function FilterDrawer({
       {/* Status Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-4 mt-4 border-t border-borderDark/80 text-xs text-gray-400">
         <div>
-          Showing <span className="font-bold text-white">{totalFiltered}</span> movies matching your criteria
+          {isSearchingGlobal ? (
+            <span className="text-emerald-400 font-medium flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              Searching 1 Million+ global database in real-time...
+            </span>
+          ) : (
+            <span>
+              Showing <span className="font-bold text-white">{totalFiltered}</span> movies matching your criteria
+            </span>
+          )}
         </div>
 
         {hasActiveFilters && (
