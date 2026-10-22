@@ -15,36 +15,44 @@ interface FilterDrawerProps {
 }
 
 const POPULAR_DIRECTORS = [
-  "Christopher Nolan",
-  "Denis Villeneuve",
-  "Quentin Tarantino",
-  "Martin Scorsese",
-  "James Cameron",
-  "Steven Spielberg",
-  "Ridley Scott",
   "S.S. Rajamouli",
+  "Christopher Nolan",
+  "Rajkumar Hirani",
+  "Denis Villeneuve",
+  "Sanjay Leela Bhansali",
+  "Anurag Kashyap",
+  "Quentin Tarantino",
+  "Sukumar",
+  "Mani Ratnam",
+  "James Cameron",
 ];
 
 const POPULAR_ACTORS = [
-  "Cillian Murphy",
-  "Leonardo DiCaprio",
-  "Christian Bale",
-  "Robert Downey Jr.",
-  "Scarlett Johansson",
-  "Timothée Chalamet",
-  "Brad Pitt",
   "Shah Rukh Khan",
+  "Prabhas",
+  "Amitabh Bachchan",
+  "Allu Arjun",
+  "Leonardo DiCaprio",
+  "Aamir Khan",
+  "Ranbir Kapoor",
+  "Salman Khan",
+  "Ram Charan",
+  "Cillian Murphy",
 ];
 
 const TRENDING_SEARCHES = [
+  "Sholay",
+  "3 Idiots",
+  "Baahubali",
+  "Pushpa 2",
+  "RRR",
+  "Kalki 2898 AD",
+  "Stree 2",
   "Oppenheimer",
   "Dune: Part Two",
-  "Deadpool & Wolverine",
-  "Killers of the Flower Moon",
+  "KGF Chapter 2",
   "12th Fail",
-  "Kalki 2898 AD",
-  "Interstellar",
-  "The Dark Knight",
+  "Gangs of Wasseypur",
 ];
 
 export function FilterDrawer({
@@ -123,7 +131,7 @@ export function FilterDrawer({
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            Curated ML Catalog (4,800+ Blockbusters)
+            Curated ML Catalog (5,000+ Bollywood, Tollywood & Hollywood)
           </button>
 
           <button
