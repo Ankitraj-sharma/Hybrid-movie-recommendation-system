@@ -55,6 +55,15 @@ const TRENDING_SEARCHES = [
   "Gangs of Wasseypur",
 ];
 
+const INDIAN_INDUSTRIES = [
+  { label: "🇮🇳 All Indian Cinema", genre: "Indian Cinema" },
+  { label: "🎬 Bollywood (Hindi)", genre: "Bollywood" },
+  { label: "⚡ Tollywood (Telugu)", genre: "Tollywood" },
+  { label: "🔥 Kollywood (Tamil)", genre: "Kollywood" },
+  { label: "✨ Mollywood (Malayalam)", genre: "Mollywood" },
+  { label: "👑 Sandalwood (Kannada)", genre: "Sandalwood" },
+];
+
 export function FilterDrawer({
   filters,
   onFilterChange,
@@ -163,8 +172,8 @@ export function FilterDrawer({
           onChange={(e) => handleSearchChange(e.target.value)}
           placeholder={
             isGlobalSearch
-              ? "Search across 1,000,000+ movies (e.g. Oppenheimer, Dune 2, Deadpool, Sholay, Avatar)..."
-              : "Search curated titles by movie name, director, actor, or genre..."
+              ? "Search across 1,000,000+ Indian & Global movies (e.g. Sholay, Baahubali, Pushpa 2, 3 Idiots, Kalki, Oppenheimer)..."
+              : "Search curated titles by movie name, director (Rajamouli, Nolan, Hirani), actor (SRK, Prabhas, Allu Arjun), or genre..."
           }
           className="w-full bg-surface border border-borderDark focus:border-accent text-white placeholder-gray-400 rounded-xl pl-12 pr-4 py-3.5 text-sm sm:text-base outline-none transition shadow-inner"
         />
@@ -307,6 +316,31 @@ export function FilterDrawer({
                 }`}
               >
                 {actor}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Indian Cinema Industry Selector */}
+      <div className="mb-4 pt-3 border-t border-borderDark/80">
+        <span className="text-xs font-semibold text-gold uppercase tracking-wider flex items-center gap-1.5 mb-2">
+          🇮🇳 Indian Cinema Industries
+        </span>
+        <div className="flex flex-wrap gap-1.5">
+          {INDIAN_INDUSTRIES.map((ind) => {
+            const isSelected = filters.selectedGenres.includes(ind.genre);
+            return (
+              <button
+                key={ind.genre}
+                onClick={() => handleGenreToggle(ind.genre)}
+                className={`text-xs px-3 py-1.5 rounded-lg transition font-medium border ${
+                  isSelected
+                    ? "bg-gold text-black font-bold border-gold shadow-md shadow-gold/30"
+                    : "bg-surface hover:bg-cardHover text-gray-200 border-borderDark hover:border-gold/50"
+                }`}
+              >
+                {ind.label}
               </button>
             );
           })}
